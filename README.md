@@ -16,9 +16,12 @@
 ### PacBio Revio
 
 ### ONT 9.4
-- NA12878 DNA sequencing from nanopore WSG consortium 
-  - basecalled sequences (Guppy 6.1.3 super accuracy) (SRR23513621)
-- SRX22703621: WGS of HG001 using Oxford Nanopore SQK-LSK109 (PromethION) 
+- **SRR23513621** NA12878 DNA sequencing from nanopore WSG consortium 
+  - basecalled sequences (Guppy 6.1.3 super accuracy)
+- **SRX22703621**: WGS of HG001 using Oxford Nanopore SQK-LSK109 (PromethION) 
+- **ERX3306008**: MinION sequencing
+
+
 ### ONT 10.4
 **Dorado XX**
 
@@ -49,3 +52,8 @@ Design: Library was prepared using the TruSeq DNA PCR-Free Library Prep kit (Ill
 **SRX7630724**: Genomic long reads of NA12878 (Nanopore)
 1 OXFORD_NANOPORE (PromethION) run: 17.6M spots, 116.3G bases, 93.5Gb downloads
 Design: Three flow cells were run with the sample NA12878. One flow cell was loaded with a library prepared from unsheared genomic DNA. For the additional two sequencing runs, 14g of NA12878 genomic DNA was mechanically sheared with Megaruptor 3 (Diagenode) with the manufacturers recommended speed to get sheared DNA with an average fragment length of 30Kb.
+
+**ERX3306008**: MinION sequencing
+1 OXFORD_NANOPORE (MinION) run: 867,351 spots, 5.8G bases, 4.8Gb downloads
+Submitted by: WELLCOME CENTRE FOR HUMAN GENETICS, UNIVERSITY OF OXFORD (WELLCOME CENTRE FOR HUMAN GENETICS, UNIVERSITY OF )
+Study: We evaluate the potential for routine WGS using ONT by sequencing the well-characterised reference sample NA12878 and the genome of an individual with ataxia-pancytopenia syndrome accompanied by severe immune dysregulation.
