@@ -2,6 +2,20 @@
 
 ## Compile datasets
 
+In general
+
+```
+ml datasets
+ml sratoolkit/3.0.2
+ml aria2/1.36.0-GCCcore-11.3.0
+prefetch SRR12324251
+fasterq-dump SRR12324251
+
+### OR
+aria2c -c -x 16 -s 16 https://my_file
+
+```
+
 ### Illumina NovaSeq 6000
 - ZymoBIOMICS Microbial Community Standard biological replicate 3 SRR12324251
   - Illumina PE Illuminas Nextera kit NovaSeq 6000
@@ -12,9 +26,67 @@
 ### BGI
 - SRX7630722 SRR10965089: Genomic pair-end reads of NA12878 (MGI)
 
-### PacBio RSII
+### PacBio Sequel / RSII
+SRX4286597: SRR7415629 PacBio Sequel data for B. subtilis
+1 PACBIO_SMRT (Sequel) run: 758,419 spots, 4.9G bases, 1.2Gb downloads
+
+SRX4367484: SRR7498042 PacBio RSII data for B. subtilis
+1 PACBIO_SMRT (PacBio RS II) run: 163,482 spots, 1.6G bases, 5.2Gb downloads
+
+SRX4286604: SRR7415622 PacBio RSII data for E. faecalis
+1 PACBIO_SMRT (PacBio RS II) run: 163,482 spots, 2.2G bases, 6.9Gb downloads
+
+SRX4286596: SRR7415630 PacBio Sequel data for E. faecalis
+1 PACBIO_SMRT (Sequel) run: 718,355 spots, 4.8G bases, 1.1Gb downloads
+
+SRX4367485: SRR7498041 PacBio RSII data for E. coli
+1 PACBIO_SMRT (PacBio RS II) run: 163,482 spots, 1.8G bases, 5.7Gb downloads
+
+SRX4286602: SRR7415624 PacBio RSII data for L. monocytogenes
+1 PACBIO_SMRT (PacBio RS II) run: 163,482 spots, 1.2G bases, 3.8Gb downloads
+
+SRX4286591: SRR7415635 PacBio Sequel data for L. monocytogenes
+1 PACBIO_SMRT (Sequel) run: 270,872 spots, 1.6G bases, 377.6Mb downloads
+
+SRX4367483: SRR7498043 PacBio RSII data for P. aeruginosa
+1 PACBIO_SMRT (PacBio RS II) run: 163,482 spots, 1.1G bases, 3.5Gb downloads
+
+SRX4367478: SRR7498048 PacBio RSII data for S. cerevisiae
+1 PACBIO_SMRT (PacBio RS II) run: 163,482 spots, 625.5M bases, 2.2Gb downloads
+
+SRX4286588: SRR7415638 PacBio Sequel data for S. cerevisiae
+1 PACBIO_SMRT (Sequel) run: 487,556 spots, 3.2G bases, 760Mb downloads
+
+SRX4286600: SRR7415626	PacBio RSII data for S. enterica
+1 PACBIO_SMRT (PacBio RS II) run: 163,482 spots, 832.1M bases, 2.7Gb downloads
+
+SRX4286590: SRR7415636 PacBio Sequel data for S. enterica
+1 PACBIO_SMRT (Sequel) run: 737,652 spots, 5G bases, 1.2Gb downloads
+
+SRX4286589: SRR7415637 PacBio Sequel data for S. aureus
+1 PACBIO_SMRT (Sequel) run: 649,636 spots, 4.7G bases, 1.1Gb downloads
+
+SRX4286599: SRR7415627 PacBio RSII data for S. aureus
+1 PACBIO_SMRT (PacBio RS II) run: 163,482 spots, 932.4M bases, 3.1Gb downloads
 
 ### PacBio Revio
+
+### PacBio Vega HiFi longread
+**HG002**
+https://downloads.pacbcloud.com/public/2024Q4/Vega/HG002/data/
+https://downloads.pacbcloud.com/public/2024Q4/Vega/HG002/data/m21009_241011_231051.hifi_reads.bam
+
+**Sea Otter**
+Vega reference: SeaOtter.vega.asm.bp.p_ctg.fasta.gz
+Vega: m84039_241127_062719_s1.hifi_reads.bam
+Revio reference: SeaOtter.revio.asm.bp.p_ctg.fasta.gz 
+Revio: m21022_241205_234232.hifi_reads.bam
+
+**Flannel Bush**
+Revio reference: CAFlannelBush.revio.asm.bp.p_ctg.fasta.gz
+Revio reads: m84039_241126_002908_s4.hifi_reads.bam
+Vega reference: CAFlannelBush.vega.asm.bp.p_ctg.fasta.gz 
+Vega reads: m21018_241205_234013.hifi_reads.bam
 
 ### ONT 9.4
 - **SRR23513621** NA12878 DNA sequencing from nanopore WSG consortium 
@@ -33,14 +105,6 @@ Nanopore WGS of HG002
 Nanopore WGS of HG002
 
 **Dorado XX**
-
-```
-ml datasets
-ml sratoolkit/3.0.2
-prefetch SRR12324251
-fasterq-dump SRR12324251
-
-```
 
 Results first in a `dir` with the name of rhe SRA 
 
