@@ -1,33 +1,65 @@
 #!/bin/bash
+set -euo pipefail
 
-# Set the maximum size in bytes (10 GB)
-MAX_BYTES=$((10 * 1024 * 1024 * 1024))
+MAX_GB=10
+MAX_BYTES=$((MAX_GB * 1024 * 1024 * 1024))
+COMP_RATIO=2.5
+SAMPLED_BYTES=$((MAX_BYTES / COMP_RATIO))
 
-# Find BAM and FASTQ files recursively
-find . -type f \( -name "*.bam" -o -name "*.fastq" -o -name "*.fastq.gz" \) | while read -r F; do
-  DIR=$(dirname "$F")
-  BASE=$(basename "$F")
-  EXT="${BASE##*.}"
+echo "🔍 Scanning for BAM and FASTQ files..."
 
-  # Handle BAM files
-  if [[ "$F" == *.bam ]]; then
-    OUT_FASTQ="${F%.bam}.fastq.gz"
-    if [[ ! -f "$OUT_FASTQ" ]]; then
-      echo "Converting $F to FASTQ"
-      samtools fastq "$F" | gzip > "$OUT_FASTQ"
-    else
-      echo "FASTQ already exists for $F"
-    fi
-    F="$OUT_FASTQ"  # Reset to newly created FASTQ
-    BASE=$(basename "$F")
+# Step 1: Convert BAMs to gzipped FASTQ (assume single-end)
+find . -type f -name "*.bam" | while read -r BAM; do
+  OUT_FASTQ="${BAM%.bam}.fastq.gz"
+  if [[ ! -f "$OUT_FASTQ" ]]; then
+    echo "💥 Converting $BAM → $OUT_FASTQ"
+    samtools fastq "$BAM" | gzip > "$OUT_FASTQ"
+  else
+    echo "✅ Already converted: $OUT_FASTQ"
+  fi
+done
+
+# Step 2: Find all FASTQ/_1.fastq and sample
+find . -type f \( -name "*.fastq" -o -name "*.fastq.gz" \) | while read -r FQ; do
+  BASE=$(basename "$FQ")
+  DIR=$(dirname "$FQ")
+
+  # skip _2.fastq if paired — only process _1
+  if [[ "$BASE" =~ _2\.fastq$ || "$BASE" =~ _2\.fastq\.gz$ ]]; then
+    continue
   fi
 
-  # Now sample the FASTQ
-  SAMPLED_FASTQ="${F%.fastq*}_samp.fastq.gz"
-  if [[ ! -f "$SAMPLED_FASTQ" ]]; then
-    echo "Sampling up to 10GB from $F → $SAMPLED_FASTQ"
-    seqkit head -s "$MAX_BYTES" "$F" > "$SAMPLED_FASTQ"
+  # Check if this is a paired-end _1 file
+  if [[ "$BASE" =~ _1\.fastq$ ]]; then
+    PAIR1="$FQ"
+    PAIR2="${FQ/_1.fastq/_2.fastq}"
+  elif [[ "$BASE" =~ _1\.fastq\.gz$ ]]; then
+    PAIR1="$FQ"
+    PAIR2="${FQ/_1.fastq.gz/_2.fastq.gz}"
   else
-    echo "Sampled file already exists: $SAMPLED_FASTQ"
+    PAIR1=""
+    PAIR2=""
+  fi
+
+  if [[ -n "$PAIR2" && -f "$PAIR2" ]]; then
+    # Paired-end sampling
+    OUT1="${PAIR1%.fastq*}_samp.fastq.gz"
+    OUT2="${PAIR2%.fastq*}_samp.fastq.gz"
+    if [[ -f "$OUT1" && -f "$OUT2" ]]; then
+      echo "✅ Sampled pair already exists: $OUT1 + $OUT2"
+    else
+      echo "👫 Sampling paired-end: $PAIR1 + $PAIR2 → ~${MAX_GB}GB total"
+      seqkit sample -s 42 -m "$SAMPLED_BYTES" -p "$PAIR1" "$PAIR2" \
+        --out-file1 "$OUT1" --out-file2 "$OUT2"
+    fi
+  else
+    # Single-end sampling
+    OUT="${FQ%.fastq*}_samp.fastq.gz"
+    if [[ -f "$OUT" ]]; then
+      echo "✅ Sampled SE already exists: $OUT"
+    else
+      echo "🎯 Sampling single-end: $FQ → ~${MAX_GB}GB"
+      seqkit sample -s 42 -m "$SAMPLED_BYTES" "$FQ" -o "$OUT"
+    fi
   fi
 done
